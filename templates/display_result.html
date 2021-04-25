@@ -6,6 +6,33 @@
 
 {% block content %}
 
-<h1>Display</h1>
+<h4 class="p-4">Found {{ searched_results[1] }} records for {{ search_key }}</h4>
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Count</th>
+        <th scope="col">Type</th>
+        <th scope="col">Health product</th>
+        <th scope="col">Title</th>
+        <th scope="col">Content</th>
+        <th scope="col">date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        {% for result in searched_results[0] %}
+            <th scope="row">{{ result[0] }}</th>
+                <td>{{ result[1] }}</td>
+                <td>{{ result[2] }}</td>
+                <td>{{ result[4] }}</td>
+                <td>{{ result[5] }}</td>
+                <td>{{ result[3] }}</td>
+            </tr>
+        {% endfor %}
+
+    </tbody>
+  </table>
+  
 
 {% endblock %}
