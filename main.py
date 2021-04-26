@@ -13,12 +13,13 @@ def home():
         return render_template('home.html')
     elif request.method == 'POST':
         search_key = request.form['s']
-        if len(search_key) == 0:
+        value_type = request.form['value_type']
+        if len(search_key) == 0 and value_type == '':
             flash('Please search something ..')
             return redirect(url_for('home'))
         
         crawl_obj = ansm.SearchOperation(chromdriver)
-        searched_data = crawl_obj.search(request.form['s'])
+        searched_data = crawl_obj.search(search_string=search_key, value_type=value_type)
 
         return render_template('display_result.html', searched_results=searched_data, search_key=search_key)
 
