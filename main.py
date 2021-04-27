@@ -5,6 +5,8 @@ import time
 app = Flask(__name__)
 app.secret_key = "secret_key"
 chromdriver = 'chromedriver/chromedriver'
+# chromedriver for linux
+# chromdriver = 'chromedriver/chromedriver'
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
