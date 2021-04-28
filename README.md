@@ -27,5 +27,5 @@ crawl data with the searched key from ANSM database.
 * Clone the project then goto ansm-crawling directory
 * Run command `python -m virtualenv project_env`
 * run command `project_env\Scripts\activate`
-* run command `pip install flask selenium`
+* run command `pip install flask selenium webdriver_manager`
 * After all, run the main.py file 
