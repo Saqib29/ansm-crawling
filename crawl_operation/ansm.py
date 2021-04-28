@@ -40,7 +40,7 @@ class SearchOperation:
             self.select_date(date)
         elif anteriority != '':
             self.select_anteriority(anteriority)
-            return False     
+            
         
 
         # crawling strategy
@@ -100,9 +100,8 @@ class SearchOperation:
             this_month.click()
 
         time.sleep(2)
-        validate = self.driver.find_element_by_link_text("Valider")
-        print(validate)
-        validate.click()
+        valider = self.driver.find_element_by_link_text("Valider")
+        self.driver.execute_script("arguments[0].click();", valider)
 
 
 

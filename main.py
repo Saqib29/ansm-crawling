@@ -26,8 +26,7 @@ def home():
         crawl_obj = ansm.SearchOperation(chromdriver)
         searched_data = crawl_obj.search(search_string=search_key, date=date, anteriority=anteriority)
 
-        if searched_data == False:
-            return "worked"
+        
 
         return render_template('display_result.html', searched_results=searched_data, search_key=search_key)
 
