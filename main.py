@@ -50,5 +50,7 @@ def home():
         return render_template('display_result.html', searched_results=searched_data, search_key=search_key)
 
 
+
+
 if __name__ == "__main__":
     app.run(debug=True)

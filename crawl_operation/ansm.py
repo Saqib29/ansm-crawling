@@ -1,16 +1,21 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 import time
 
 
 class SearchOperation:
     def __init__(self):
-        
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        options = Options()
+        options.add_argument("--start-maximized")
+        options.add_argument("headless")
+
+        self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
         self.url = "https://ansm.sante.fr/S-informer/Informations-de-securite-Lettres-aux-professionnels-de-sante"
 
 
+    # main search method
     def search(self, search_string, date, anteriority):
 
         # keep chrome position away to hide window
@@ -33,9 +38,20 @@ class SearchOperation:
 
         # get seaching field and send search string
         search_field = self.driver.find_elements_by_id('filter_text')[0]
-        search_field.clear()
-        search_field.send_keys(search_string)
-        search_field.send_keys(Keys.ENTER)
+        # headless solved after add this strategies instead
+        value = self.driver.execute_script('return arguments[0].value;', search_field)
+        self.driver.execute_script('''
+            var elem = arguments[0];
+            var value = arguments[1];
+            elem.value = value;
+        ''', search_field, search_string)
+        search_icon = self.driver.find_element_by_xpath('//*[@id="btn-header-icon"]')
+        self.driver.execute_script('arguments[0].click();', search_icon)
+        
+        self.driver.implicitly_wait(2)
+
+        search_button = self.driver.find_element_by_xpath('//*[@id="btn-header-search"]')
+        self.driver.execute_script('arguments[0].click();', search_button)
 
 
 
@@ -56,24 +72,28 @@ class SearchOperation:
         try:
             for i in range(1, len(articles)+1):
                 data = self.driver.find_element_by_xpath('//*[@id="wrapper"]/div/div/article['+ str(i) +']')
+
                 try:
-                    # try except for each  
+                    # try except for each 
                     try:
                         category = data.find_element_by_xpath('//*[@id="wrapper"]/div/div/article[1]/a/span[1]').text
                     except:
-                        category = ''
+                        category = 'N/A'
                     
                     try:
                         product_type = data.find_element_by_xpath('//*[@id="wrapper"]/div/div/article[1]/a/span[2]').text
                     except:
-                        product_type = ''
+                        product_type = 'N/A'
                     
                     try:
                         article_date = data.find_element_by_class_name('article-date').text
                     except:
-                        article_date = ''
+                        article_date = 'N/A'
+
 
                     content = data.find_element_by_class_name('article-content').text
+                    if len(content) == 0:
+                        content = 'N/A'
                     article_title = data.find_element_by_class_name('article-title').text
                     count += 1
                     
@@ -87,7 +107,7 @@ class SearchOperation:
             print(e)
 
         time.sleep(5)
-        self.driver.quit()
+        # self.driver.quit()
         total_result = len(searched_results)
 
 
@@ -100,24 +120,33 @@ class SearchOperation:
     # for selection an an anteriority
     def select_anteriority(self, anteriority):
         date_btn = self.driver.find_element_by_xpath('//*[@id="filter_result"]/div/div[2]/div/div[4]/a')
-        date_btn.send_keys(Keys.ENTER)
+        # date_btn.send_keys(Keys.ENTER)
+        self.driver.execute_script("arguments[0].click();", date_btn)
         time.sleep(2)
 
         if anteriority == 'this_week':
             this_week = self.driver.find_element_by_xpath('//*[@id="h-filters4"]/div/div/div[1]/div/div[1]/label/span')
-            this_week.click()
+            # this_week.click()
+            self.driver.execute_script("arguments[0].click();", this_week)
+
             
         elif anteriority == 'this_month':
             this_month = self.driver.find_element_by_xpath('//*[@id="h-filters4"]/div/div/div[1]/div/div[2]/label/span')
-            this_month.click()
+            # this_month.click()
+            self.driver.execute_script("arguments[0].click();", this_month)
+
 
         elif anteriority == '6-month-old':
             this_month = self.driver.find_element_by_xpath('//*[@id="h-filters4"]/div/div/div[1]/div/div[3]/label/span')
-            this_month.click()
+            # this_month.click()
+            self.driver.execute_script("arguments[0].click();", this_month)
+
 
         elif anteriority == '1-year-old':
             this_month = self.driver.find_element_by_xpath('//*[@id="h-filters4"]/div/div/div[1]/div/div[4]/label/span')
-            this_month.click()
+            # this_month.click()
+            self.driver.execute_script("arguments[0].click();", this_month)
+            
 
         time.sleep(2)
         self.valider()
@@ -133,10 +162,10 @@ class SearchOperation:
 
 
 
-    # method to select time period
+    # method to select time period by date
     def select_date(self, date):
         date_btn = self.driver.find_element_by_xpath('//*[@id="filter_result"]/div/div[2]/div/div[4]/a')
-        date_btn.send_keys(Keys.ENTER)
+        self.driver.execute_script("arguments[0].click();", date_btn)
         time.sleep(2)
 
         # set start date
@@ -187,13 +216,3 @@ class SearchOperation:
         click.click()
 
 
-
-
-# obj = SearchOperation() 
-# results = obj.search("Covid")
-
-
-
-# print(results[0])
-# print()
-# print(results[1])
