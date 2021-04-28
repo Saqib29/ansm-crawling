@@ -44,7 +44,7 @@ def home():
 
         #calling the main method search
         searched_data = crawl_obj.search(search_string=search_key, date=date, anteriority=anteriority)
-
+        time.sleep(1)
         
         # rendering display to show searched data 
         return render_template('display_result.html', searched_results=searched_data, search_key=search_key)

@@ -42,7 +42,7 @@ class SearchOperation:
         #  search by date or anteriority
         if date[0] != '' and date[1] != '':
             self.select_date(date)
-            
+
         elif anteriority != '':
             self.select_anteriority(anteriority)
             
@@ -108,9 +108,15 @@ class SearchOperation:
             this_month.click()
 
         time.sleep(2)
+        self.valider()
+
+
+
+
+    #  valider button
+    def valider(self):
         valider = self.driver.find_element_by_link_text("Valider")
         self.driver.execute_script("arguments[0].click();", valider)
-
 
 
 
@@ -120,8 +126,29 @@ class SearchOperation:
         date_btn = self.driver.find_element_by_xpath('//*[@id="filter_result"]/div/div[2]/div/div[4]/a')
         date_btn.send_keys(Keys.ENTER)
         time.sleep(2)
-        
 
+        # set start date
+        startDate = self.driver.find_element_by_id('filter_startDate')
+        value = self.driver.execute_script('return arguments[0].value;', startDate)
+        self.driver.execute_script('''
+            var elem = arguments[0];
+            var value = arguments[1];
+            elem.value = value;
+        ''', startDate, date[0])
+
+        # set end date
+        endDate = self.driver.find_element_by_id('filter_endDate')
+        value = self.driver.execute_script('return arguments[0].value;', endDate)
+        self.driver.execute_script('''
+            var elem = arguments[0];
+            var value = arguments[1];
+            elem.value = value;
+        ''', endDate, date[1])
+
+        time.sleep(1)
+        self.valider()
+        
+        
 
 
 
