@@ -26,7 +26,7 @@
           <input name="s" type="text" class="form-control" id="exampleInputSearch" aria-describedby="searchHelp" placeholder="Type for search . .">
         </div>
 
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label for="exampleFormControlSelect1">Or Secelct a Type</label>
             <select name="value_type" class="form-control" id="exampleFormControlSelect1">
               <option value="">Select a type</option>
@@ -34,8 +34,37 @@
               <option value="INFORMATION_AUX_UTILISATURS">INFORMATION AUX UTILISATURS</option>
               <option value="RAPPEL_DE_PRODUIT">RAPPEL DE PRODUIT</option>
             </select>
+        </div> -->
+
+        
+        <div class="form-group">
+            <label for="exampleFormControlSelect2">Choose an anteriority</label>
+            <select name="anteriority" class="form-control" id="exampleFormControlSelect2">
+              <option value="">Select a type</option>
+              <option value="this_week">This week</option>
+              <option value="this_month">This month</option>
+              <option value="6-month-old">6-month-old</option>
+              <option value="1-year-old">1-year-old</option>
+            </select>
         </div>
         
+        Select a time period
+        <div class="w-100"></div>
+        
+        <div class="row p-4">
+            <div class="col">
+                <input name="start_date" type="date" class="form-control" data-date-end-date="0d">
+                
+            </div>
+            <div class="col">
+                <input name="end_date" type="date" class="form-control" data-date-end-date="0d">
+                
+            </div>
+            <div class="w-100"></div>
+            <!-- <div class="col">Column</div>
+            <div class="col">Column</div> -->
+        </div>
+
         <button type="submit" id="button" class="btn btn-primary">Search</button>
     </form>
     

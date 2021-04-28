@@ -1,47 +1,46 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-# from selenium.webdriver.chrome.options import Options
-# from selenium.webdriver import DesiredCapabilities
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.common.by import By
-# from selenium.webdriver.support import expected_conditions as EC
 import time
 
 
 class SearchOperation:
     def __init__(self, driver_path):
-        # chrome_option = Options()
-        # chrome_option.add_argument('--headless')
-
-        # capabilities = DesiredCapabilities.CHROME.copy()
-        # capabilities['acceptSslCerts'] = True 
-        # capabilities['acceptInsecureCerts'] = True
-
-        # chromedriver = "../chromedriver/chromedriver"
+        
         chromedriver = driver_path
         self.driver = webdriver.Chrome(chromedriver)
-        # self.driver = webdriver.PhantomJS('D:/Lexero GmbH/phantomjs-2.1.1-windows/bin/phantomjs.exe')
         self.url = "https://ansm.sante.fr/S-informer/Informations-de-securite-Lettres-aux-professionnels-de-sante"
 
 
-    def search(self, search_string='', value_type=''):
+    def search(self, search_string, date, anteriority):
 
         # keep chrome position away to hide window
-        self.driver.set_window_position(-3000, -30)
+        # self.driver.set_window_position(-3000, -30)
         self.driver.get(self.url)
         self.driver.refresh()
 
-        # searching strategy
-        if search_string != '':
-            search_field = self.driver.find_elements_by_id('filter_text')[0]
-            search_field.clear()
+        # # searching strategy
+        # if search_string != '':
+        #     search_field = self.driver.find_elements_by_id('filter_text')[0]
+        #     search_field.clear()
 
-            search_field.send_keys(search_string)
-            search_field.send_keys(Keys.ENTER)
+        #     search_field.send_keys(search_string)
+        #     search_field.send_keys(Keys.ENTER)
 
-        elif search_string == '' and value_type != '':
-            self.types(value_type)
+        # elif search_string == '' and value_type != '':
+        #     self.types(value_type)
 
+        search_field = self.driver.find_elements_by_id('filter_text')[0]
+        search_field.clear()
+
+        search_field.send_keys(search_string)
+        search_field.send_keys(Keys.ENTER)
+
+
+        if date[0] != '' and date[1] != '':
+            self.select_date(date)
+        elif anteriority != '':
+            self.select_anteriority(anteriority)
+            return False     
         
 
         # crawling strategy
@@ -79,6 +78,38 @@ class SearchOperation:
         return (searched_results, total_result)
 
 
+    def select_anteriority(self, anteriority):
+        date_btn = self.driver.find_element_by_xpath('//*[@id="filter_result"]/div/div[2]/div/div[4]/a')
+        date_btn.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        if anteriority == 'this_week':
+            this_week = self.driver.find_element_by_xpath('//*[@id="h-filters4"]/div/div/div[1]/div/div[1]/label/span')
+            this_week.click()
+            
+        elif anteriority == 'this_month':
+            this_month = self.driver.find_element_by_xpath('//*[@id="h-filters4"]/div/div/div[1]/div/div[2]/label/span')
+            this_month.click()
+
+        elif anteriority == '6-month-old':
+            this_month = self.driver.find_element_by_xpath('//*[@id="h-filters4"]/div/div/div[1]/div/div[3]/label/span')
+            this_month.click()
+
+        elif anteriority == '1-year-old':
+            this_month = self.driver.find_element_by_xpath('//*[@id="h-filters4"]/div/div/div[1]/div/div[4]/label/span')
+            this_month.click()
+
+        time.sleep(2)
+        validate = self.driver.find_element_by_link_text("Valider")
+        print(validate)
+        validate.click()
+
+
+
+    def select_date(self, date):
+        date_btn = self.driver.find_element_by_xpath('//*[@id="filter_result"]/div/div[2]/div/div[4]/a')
+        date_btn.send_keys(Keys.ENTER)
+        
 
 
     def types(self, value_type):

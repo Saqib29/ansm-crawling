@@ -15,13 +15,19 @@ def home():
         return render_template('home.html')
     elif request.method == 'POST':
         search_key = request.form['s']
-        value_type = request.form['value_type']
-        if len(search_key) == 0 and value_type == '':
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+        anteriority = request.form['anteriority']
+        if len(search_key) == 0:
             flash('Please search something ..')
             return redirect(url_for('home'))
         
+        date = (start_date, end_date)
         crawl_obj = ansm.SearchOperation(chromdriver)
-        searched_data = crawl_obj.search(search_string=search_key, value_type=value_type)
+        searched_data = crawl_obj.search(search_string=search_key, date=date, anteriority=anteriority)
+
+        if searched_data == False:
+            return "worked"
 
         return render_template('display_result.html', searched_results=searched_data, search_key=search_key)
 
