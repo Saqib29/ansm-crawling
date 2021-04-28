@@ -57,11 +57,23 @@ class SearchOperation:
             for i in range(1, len(articles)+1):
                 data = self.driver.find_element_by_xpath('//*[@id="wrapper"]/div/div/article['+ str(i) +']')
                 try:
-                        
-                    category = data.find_element_by_xpath('//*[@id="wrapper"]/div/div/article[1]/a/span[1]').text
-                    product_type = data.find_element_by_xpath('//*[@id="wrapper"]/div/div/article[1]/a/span[2]').text
+                    # try except for each  
+                    try:
+                        category = data.find_element_by_xpath('//*[@id="wrapper"]/div/div/article[1]/a/span[1]').text
+                    except:
+                        category = ''
+                    
+                    try:
+                        product_type = data.find_element_by_xpath('//*[@id="wrapper"]/div/div/article[1]/a/span[2]').text
+                    except:
+                        product_type = ''
+                    
+                    try:
+                        article_date = data.find_element_by_class_name('article-date').text
+                    except:
+                        article_date = ''
+
                     content = data.find_element_by_class_name('article-content').text
-                    article_date = data.find_element_by_class_name('article-date').text
                     article_title = data.find_element_by_class_name('article-title').text
                     count += 1
                     
