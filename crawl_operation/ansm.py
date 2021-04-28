@@ -1,13 +1,13 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 
 
 class SearchOperation:
-    def __init__(self, driver_path):
+    def __init__(self):
         
-        chromedriver = driver_path
-        self.driver = webdriver.Chrome(chromedriver)
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
         self.url = "https://ansm.sante.fr/S-informer/Informations-de-securite-Lettres-aux-professionnels-de-sante"
 
 
@@ -18,26 +18,31 @@ class SearchOperation:
         self.driver.get(self.url)
         self.driver.refresh()
 
-        # # searching strategy
-        # if search_string != '':
-        #     search_field = self.driver.find_elements_by_id('filter_text')[0]
-        #     search_field.clear()
+        """
+        # searching strategy for type selection commented
+        if search_string != '':
+            search_field = self.driver.find_elements_by_id('filter_text')[0]
+            search_field.clear()
 
-        #     search_field.send_keys(search_string)
-        #     search_field.send_keys(Keys.ENTER)
+            search_field.send_keys(search_string)
+            search_field.send_keys(Keys.ENTER)
 
-        # elif search_string == '' and value_type != '':
-        #     self.types(value_type)
+        elif search_string == '' and value_type != '':
+            self.types(value_type)
+        """
 
+        # get seaching field and send search string
         search_field = self.driver.find_elements_by_id('filter_text')[0]
         search_field.clear()
-
         search_field.send_keys(search_string)
         search_field.send_keys(Keys.ENTER)
 
 
+
+        #  search by date or anteriority
         if date[0] != '' and date[1] != '':
             self.select_date(date)
+            
         elif anteriority != '':
             self.select_anteriority(anteriority)
             
@@ -59,7 +64,7 @@ class SearchOperation:
                     article_date = data.find_element_by_class_name('article-date').text
                     article_title = data.find_element_by_class_name('article-title').text
                     count += 1
-                    # print(product_type, category, article_date, article_title)
+                    
                 except:
                     continue
                 
@@ -69,15 +74,18 @@ class SearchOperation:
         except Exception as e:
             print(e)
 
-        
         time.sleep(5)
         self.driver.quit()
-
         total_result = len(searched_results)
+
 
         return (searched_results, total_result)
 
 
+
+
+
+    # for selection an an anteriority
     def select_anteriority(self, anteriority):
         date_btn = self.driver.find_element_by_xpath('//*[@id="filter_result"]/div/div[2]/div/div[4]/a')
         date_btn.send_keys(Keys.ENTER)
@@ -105,12 +113,19 @@ class SearchOperation:
 
 
 
+
+
+    # method to select time period
     def select_date(self, date):
         date_btn = self.driver.find_element_by_xpath('//*[@id="filter_result"]/div/div[2]/div/div[4]/a')
         date_btn.send_keys(Keys.ENTER)
+        time.sleep(2)
         
 
 
+
+
+    #  type selection method is not called for now
     def types(self, value_type):
         
         type = self.driver.find_element_by_xpath('//*[@id="wrapper"]/div[1]/a[4]')
